@@ -37,19 +37,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   sections.forEach(section => observer.observe(section));
 
-  // Smooth scroll for nav links
+  // Smooth scroll for in-page hash links
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = link.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-        // Update URL hash without jumping
-        history.pushState(null, '', `#${targetId}`);
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          // Update URL hash without jumping
+          history.pushState(null, '', `#${targetId}`);
+        }
       }
     });
   });
@@ -111,13 +114,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const projectDetails = {
     'homelab': {
       title: 'Homelab Infrastructure',
-      description: 'Self-hosted Ubuntu Server homelab running Docker-based services, including SQL Server for home development testing and learning and Plex Media server to host my collection of downlaoded Movies and TV shows and Music. Built a monitoring and reporting stack using Prometheus, Grafana, and Node Exporter, alongside Python automation for scheduled media downloading and conversion, server health  reporting, and email alerts.',
-      tags: ['Linux', 'Ubuntu Server', 'Docker', 'Docker Compose', 'Prometheus', 'Grafana', 'Automated Backups']
+      description: 'Self-hosted Ubuntu Server homelab running Docker-based services, including SQL Server for home development testing and learning and Plex Media server to host my collection of downloaded Movies, TV shows, and Music. Built a monitoring and reporting stack using Prometheus, Grafana, and Node Exporter, alongside Python automation for server health reporting and Telegram/email alerts.',
+      tags: ['Ubuntu Server', 'Docker', 'Prometheus', 'Grafana', 'Portainer', 'Python']
     },
     'pipelines': {
       title: 'Job Failure Escalation Email Compiler',
-      description: 'A lightweight Python utility designed to compile job failure details into structured escalation emails, helping standardise incident communication and reduce the manual effort involved in preparing operational notifications.',
-      tags: ['Python', 'SQL', 'Email Compilation','Escalation','Logging']
+      description: 'A lightweight Python and Flask tool designed to compile job failure details into structured escalation emails, helping standardise incident communication and reduce manual effort during batch operational failures.',
+      tags: ['Python', 'Flask', 'PyInstaller', 'Email Escalation', 'IT Operations']
     },
     'desktop': {
       title: 'Python Automation & Utilities',

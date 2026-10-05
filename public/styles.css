@@ -243,6 +243,28 @@ body {
   transform: translateY(-1px);
 }
 
+/* Category Filter Button */
+.category-btn {
+  background-color: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-btn:hover {
+  border-color: rgba(45, 212, 191, 0.4);
+  color: #f1f5f9;
+  background-color: rgba(19, 78, 74, 0.2);
+}
+
+.category-btn.active {
+  background-color: rgba(19, 78, 74, 0.4);
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.2);
+}
+
 /* Social Icon Link */
 .social-icon-btn {
   display: inline-flex;
