@@ -137,5 +137,174 @@ const articles = [
         <li>Translating day-to-day IT support challenges into practical software solutions.</li>
       </ul>
     `
+  },
+  {
+    id: "youtube-audio-sync-homelab",
+    title: "From YouTube Playlist to Plex/Filesystem: Automating My Homelab with Python",
+    date: "October 2026",
+    readTime: "7 min read",
+    category: "Automation",
+    featured: true,
+    tags: ["Python", "Ubuntu Server", "yt-dlp", "FFmpeg", "SQL Server", "Telegram Bot API", "systemd", "Plex"],
+    summary: "How I built an automated media synchronization pipeline running on my ThinkPad T440p Ubuntu server, exploring idempotency, concurrency control with file locks, SQL Server logging, and systemd service management.",
+    content: `
+      <p class="lead text-slate-300 text-base leading-relaxed mb-4">
+        I wanted to make managing my local music library easier. Instead of manually downloading audio, converting files, and organizing tracks, I wanted to add a song to a YouTube playlist and let my Ubuntu server handle the rest.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        To achieve this, I built a Python-based automation pipeline running on my ThinkPad T440p homelab server. It uses <code>yt-dlp</code> and <code>FFmpeg</code> to download and process audio, Microsoft SQL Server to record metadata, and Telegram to provide remote notifications and control.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        What started as a convenience project became an opportunity to work with several important software engineering concepts, including idempotency, concurrency control, database integration, and Linux service management.
+      </p>
+
+      <h2 class="text-xl sm:text-2xl font-bold text-white mt-10 mb-3">How It Works</h2>
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        The system is built around a Python script called <code>sync_playlist.py</code>, which coordinates the audio synchronization process.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        The general workflow is:
+      </p>
+
+      <pre class="bg-slate-900/90 border border-slate-800 rounded-xl p-5 my-6 font-mono text-xs sm:text-sm text-teal-300 overflow-x-auto leading-relaxed">YouTube Playlist
+       │
+       ▼
+  yt-dlp + FFmpeg
+       │
+       ▼
+ Local MP3 Library ───► Server file system / Plex
+       │
+       ▼
+ Microsoft SQL Server
+  (Metadata Logging)
+
+Telegram Bot ◄────► Python Automation</pre>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        The downloader retrieves playlist information and processes eligible tracks into MP3 files. The resulting files are stored locally for Plex to access, while SQL Server records relevant metadata.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        Telegram provides a remote interface for notifications and supported commands, allowing me to monitor the automation without logging into the server every time.
+      </p>
+
+      <h2 class="text-xl sm:text-2xl font-bold text-white mt-10 mb-3">Preventing Duplicate Downloads with Idempotency</h2>
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        One of the main challenges with recurring automation is ensuring that running a job repeatedly doesn't result in unnecessary duplicate work.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        I addressed this using <code>yt-dlp</code>'s download archive, <code>archive.txt</code>, which records processed video IDs. On subsequent runs, the downloader can use this archive to skip videos it has already recorded.
+      </p>
+
+      <blockquote class="border-l-4 border-teal-400 pl-4 py-2 my-6 text-slate-200 italic bg-teal-950/20 rounded-r">
+        "This is an example of idempotency: designing an operation so that repeating it doesn't repeatedly produce the same unintended effects."
+      </blockquote>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        Using video IDs rather than relying only on filenames also makes the approach more reliable because titles can change or be shared by different videos.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        The archive handles download deduplication, while SQL Server serves a separate purpose by providing structured metadata and a record of activity.
+      </p>
+
+      <h2 class="text-xl sm:text-2xl font-bold text-white mt-10 mb-3">Logging Metadata and Monitoring Through Telegram</h2>
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        I integrated Microsoft SQL Server into the project using Python's <code>pyodbc</code> package and the SQL Server ODBC driver. This allows the application to record information such as track details, video IDs, and download timestamps, depending on the database schema.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        Keeping this information in a relational database makes it easier to query and inspect the history of the automation rather than relying exclusively on files stored on disk.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        For notifications, I used Python's built-in <code>urllib.request</code> and <code>json</code> modules to communicate directly with the Telegram Bot API, avoiding the need for a separate Telegram bot SDK.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        The notification system can report events such as sync progress, completion summaries, and failures. I also implemented message chunking to split longer reports into multiple messages when they approach Telegram's message-length limit.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        This gives me a convenient way to monitor the pipeline remotely while keeping the messaging implementation lightweight.
+      </p>
+
+      <!-- Telegram Notification Screenshots -->
+      <div class="my-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 flex flex-col justify-between">
+          <img src="images/manualsyncimage.PNG" alt="Interactive Telegram Sync Command" class="rounded-lg w-full max-h-[480px] object-contain mx-auto" loading="lazy" />
+          <p class="text-xs font-mono text-slate-400 mt-2 text-center">Interactive <code>Sync</code> command triggering background execution</p>
+        </div>
+        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 flex flex-col justify-between">
+          <img src="images/1amsystemservice.PNG" alt="Automated Telegram Transfer Summary" class="rounded-lg w-full max-h-[480px] object-contain mx-auto" loading="lazy" />
+          <p class="text-xs font-mono text-slate-400 mt-2 text-center">Automated completion summary report with counts & execution time</p>
+        </div>
+      </div>
+
+      <h2 class="text-xl sm:text-2xl font-bold text-white mt-10 mb-3">Handling Concurrent Runs and Background Services</h2>
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        Another important consideration was preventing two synchronization jobs from running simultaneously.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        The job can be triggered through different entry points, so overlapping executions could attempt to access shared files or process the same tracks at the same time.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        I addressed this with a file-locking mechanism in <code>lock_manager.py</code>. On Linux, the implementation uses <code>fcntl</code> file locking to coordinate processes that follow the same locking protocol.
+      </p>
+
+      <blockquote class="border-l-4 border-teal-400 pl-4 py-2 my-6 text-slate-200 italic bg-teal-950/20 rounded-r">
+        "This is an example of concurrency control: protecting shared resources when multiple processes might try to access them at once."
+      </blockquote>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        I also created <code>bot_listener.py</code> to handle incoming Telegram commands. Rather than relying on a terminal session to keep it running, I deployed the listener as a systemd service using <code>yt-audio-bot.service</code>.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        Systemd manages the service lifecycle and can restart the listener after qualifying failures when configured to do so. This allows the bot to run in the background and be available independently of an interactive login session.
+      </p>
+
+      <!-- systemd Service Status Terminal Screenshot -->
+      <div class="my-8 rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3">
+        <img src="images/botlistenerservice.png" alt="systemd service active status in terminal" class="rounded-lg w-full object-contain mx-auto" loading="lazy" />
+        <p class="text-xs font-mono text-slate-400 mt-2 text-center">Active systemd listener service running in the background on Ubuntu Server</p>
+      </div>
+
+      <h2 class="text-xl sm:text-2xl font-bold text-white mt-10 mb-3">Configuration and Security</h2>
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        The project uses <code>python-dotenv</code> to load configuration from a <code>.env</code> file, while <code>.gitignore</code> helps prevent that file from being committed to version control.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        This keeps credentials and environment-specific settings separate from the application code, making the project easier to configure and reducing the risk of accidentally exposing secrets in the repository.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        Configuration files still need appropriate filesystem permissions, and secrets that have already been committed must be handled separately. Using <code>.gitignore</code> alone does not secure previously exposed credentials.
+      </p>
+
+      <h2 class="text-xl sm:text-2xl font-bold text-white mt-10 mb-3">What I Learned</h2>
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        Building this project helped me understand how individual tools can be combined into a functioning automation system.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        I gained practical experience with Python process management, download deduplication, operating-system file locks, SQL Server integration, HTTP APIs, and systemd services.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        More importantly, I learned that reliable automation involves more than making a script work once. It requires thinking about repeated execution, shared resources, configuration, failure handling, and visibility into what the system is doing.
+      </p>
+
+      <p class="text-slate-300 mb-4 leading-relaxed">
+        The project is a practical example of applying software engineering concepts to a real problem in my own homelab, while building a foundation for more advanced automation and infrastructure projects.
+      </p>
+    `
   }
 ];
