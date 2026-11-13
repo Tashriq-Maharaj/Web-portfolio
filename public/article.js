@@ -63,7 +63,51 @@ document.addEventListener('DOMContentLoaded', () => {
   if (categoryEl) categoryEl.textContent = article.category;
   if (dateEl) dateEl.textContent = article.date;
   if (readTimeEl) readTimeEl.textContent = article.readTime;
-  if (bodyEl) bodyEl.innerHTML = article.content;
+  if (bodyEl) {
+    bodyEl.innerHTML = article.content;
+
+    // 4b. Image Lightbox (click any article image to view full size)
+    const lightbox = document.getElementById('image-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+
+    if (lightbox && lightboxImg && lightboxCaption) {
+      const openLightbox = (img) => {
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || 'Article image preview';
+        lightboxCaption.textContent = img.alt || '';
+        lightbox.showModal();
+      };
+
+      bodyEl.querySelectorAll('img').forEach((img) => {
+        img.tabIndex = 0;
+        img.setAttribute('role', 'button');
+        img.setAttribute('aria-label', `${img.alt || 'Image'} — click to enlarge`);
+        img.addEventListener('click', () => openLightbox(img));
+        img.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openLightbox(img);
+          }
+        });
+      });
+
+      // Fallback light-dismiss for browsers without closedby="any" support
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        const outside = (e) => {
+          const r = lightbox.getBoundingClientRect();
+          return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+        };
+        let pressedOutside = false;
+        lightbox.addEventListener('pointerdown', (e) => {
+          pressedOutside = outside(e);
+        });
+        lightbox.addEventListener('pointerup', (e) => {
+          if (pressedOutside && outside(e)) lightbox.close();
+        });
+      }
+    }
+  }
   if (tagsEl) {
     tagsEl.innerHTML = article.tags.map(tag => `<span class="tech-tag">${tag}</span>`).join(' ');
   }

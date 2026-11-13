@@ -102,6 +102,18 @@ const articles = [
         <li><strong>Local JSON History:</strong> Stores a rolling history of the last ~50 escalations in a lightweight JSON file. This allows operators to quickly reference recent submissions without the complexity of a database server.</li>
       </ul>
 
+      <!-- Application Interface Screenshots -->
+      <div class="my-8 space-y-6">
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/Jobfailureescalatorapp.png" alt="JSS Job Failure Escalation web interface showing recipient selection and failure details" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Local Flask web UI: recipient history and failure details (click to enlarge)</figcaption>
+        </figure>
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/Jobfailureescalatorapp%20(2).png" alt="JSS Job Failure Escalation web interface showing shift selection and Outlook escalation button" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Shift-based CC routing and Outlook escalation draft launcher (click to enlarge)</figcaption>
+        </figure>
+      </div>
+
       <h3 class="text-xl font-bold text-white mt-8 mb-3">Secure Configuration with Environment Variables</h3>
       <p class="text-slate-300 mb-4 leading-relaxed">
         Configuration settings are kept strictly separate from the application source code using <code>.env</code> files:

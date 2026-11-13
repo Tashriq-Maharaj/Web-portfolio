@@ -131,6 +131,31 @@
     .article-body li {
       margin-bottom: 0.5rem;
     }
+    .article-body img {
+      cursor: zoom-in;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .article-body img:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35);
+    }
+    /* Native Image Lightbox Dialog */
+    #image-lightbox:modal {
+      overscroll-behavior: contain;
+      max-width: 94vw;
+      max-height: 92vh;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: auto;
+      overflow: visible;
+    }
+    #image-lightbox::backdrop {
+      background-color: rgba(4, 8, 16, 0.88);
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+      overscroll-behavior: contain;
+    }
   </style>
 </head>
 <body class="bg-[#0b0f17] text-slate-400 selection:bg-teal-500/25 selection:text-teal-300 antialiased min-h-screen">
@@ -276,6 +301,20 @@
       <a href="mailto:Tashriq.maharaj@outlook.com" class="hover:text-teal-300">Contact</a>
     </div>
   </footer>
+
+  <!-- Image Lightbox Modal -->
+  <dialog id="image-lightbox" closedby="any" aria-label="Full-size image preview">
+    <div class="relative rounded-xl border border-slate-700/80 bg-slate-950/95 p-3 sm:p-4 shadow-2xl">
+      <form method="dialog" class="flex justify-end mb-2">
+        <button type="submit" autofocus aria-label="Close image preview" class="inline-flex items-center gap-1.5 text-xs font-mono text-slate-300 hover:text-teal-300 bg-slate-900 border border-slate-700 hover:border-teal-500/40 px-3 py-1.5 rounded-lg transition-colors">
+          <span>Close</span>
+          <span aria-hidden="true">✕</span>
+        </button>
+      </form>
+      <img id="lightbox-img" src="" alt="" class="max-w-[90vw] max-h-[78vh] w-auto h-auto object-contain rounded-lg mx-auto block" />
+      <p id="lightbox-caption" class="text-xs font-mono text-slate-400 mt-3 text-center"></p>
+    </div>
+  </dialog>
 
   <!-- Toast Notification -->
   <div id="toast-notification" aria-live="polite"></div>
