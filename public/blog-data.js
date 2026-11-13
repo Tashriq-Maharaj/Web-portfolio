@@ -39,6 +39,22 @@ const articles = [
         <li><strong>Telemetry Exporters:</strong> Dedicated exporter containers that collect application and host performance metrics.</li>
       </ul>
 
+      <!-- Docker, Portainer & Plex Screenshots -->
+      <div class="my-8 space-y-6">
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/SERVER%20PICS/DOCKERPORTAINER.png" alt="Portainer environment overview showing 2 stacks, 6 running containers, 4 volumes, 4 CPUs, and 8 GB RAM" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Portainer environment overview: 2 stacks, 6 running containers, 4 CPU / 8 GB RAM (click to enlarge)</figcaption>
+        </figure>
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/SERVER%20PICS/PORTAINER%20DOCKER.png" alt="Portainer container list showing grafana, mssqlserver, node-exporter, plex-exporter, portainer, and prometheus running" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Active Docker containers managed in Portainer across monitoring and SQL Server stacks (click to enlarge)</figcaption>
+        </figure>
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/SERVER%20PICS/PLEX%20MEDIA.png" alt="Plex Media Server web interface running on the local home network" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Plex Media Server streaming movies, TV, and music over the local network (click to enlarge)</figcaption>
+        </figure>
+      </div>
+
       <h3 class="text-xl font-bold text-white mt-8 mb-3">3. Monitoring: Prometheus & Grafana</h3>
       <p class="text-slate-300 mb-4 leading-relaxed">
         To understand system behavior under load, I deployed Prometheus alongside Grafana. Prometheus scrapes operational metrics on regular intervals, while Grafana visualizes the data across custom dashboards.
@@ -51,6 +67,26 @@ const articles = [
       <p class="text-slate-300 mb-4 leading-relaxed">
         This setup is designed as a practical personal implementation to understand observability principles, focusing on actionable dashboards rather than complex enterprise monitoring suites.
       </p>
+
+      <!-- Prometheus & Grafana Monitoring Screenshots -->
+      <div class="my-8 space-y-6">
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/SERVER%20PICS/PROMETHEUS.png" alt="Prometheus target health page showing node-exporter and plex scrape endpoints UP" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Prometheus target health confirming active scrapes for node-exporter and Plex (click to enlarge)</figcaption>
+        </figure>
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/SERVER%20PICS/UBUNTU%20MONITORING.png" alt="Grafana Node Exporter Full dashboard showing CPU, system load, RAM, swap, disk usage, and network traffic" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Grafana Node Exporter dashboard: Ubuntu host CPU, RAM, disk I/O, and 2.2-week uptime (click to enlarge)</figcaption>
+        </figure>
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/SERVER%20PICS/SQLSERVER%20MONITORING.png" alt="Grafana Microsoft SQL Server dashboard showing health score, sessions, batch requests, and query performance" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Grafana SQL Server dashboard: health score, session status, and top slowest/CPU-heavy queries (click to enlarge)</figcaption>
+        </figure>
+        <figure class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900/60 p-3 sm:p-4">
+          <img src="images/SERVER%20PICS/PLEX%20MONITORING.png" alt="Grafana Plex Media Server Exporter dashboard showing heartbeat, streams, transcodes, and library breakdown" class="rounded-lg w-full h-auto object-contain mx-auto" loading="lazy" />
+          <figcaption class="text-xs font-mono text-slate-400 mt-3 text-center">Grafana Plex Exporter dashboard: service heartbeat, stream activity, and library breakdown (click to enlarge)</figcaption>
+        </figure>
+      </div>
 
       <h3 class="text-xl font-bold text-white mt-8 mb-3">4. Scheduled Automation & Proactive Alerts</h3>
       <p class="text-slate-300 mb-4 leading-relaxed">
